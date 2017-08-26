@@ -1,5 +1,4 @@
 require_relative 'contact'
-require 'pry'
 
 class CRM
 
