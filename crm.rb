@@ -225,6 +225,10 @@ class CRM
 
 end
 
+at_exit do
+  ActiveRecord::Base.connection.close
+end
+
 
 a_crm_app = CRM.new("My Contacts")
 Contact.create("Marlon", "O'Neil", "marlon@email.com", nil)
