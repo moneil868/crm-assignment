@@ -1,4 +1,5 @@
 require_relative 'contact'
+require 'pry'
 
 class CRM
 
@@ -57,8 +58,14 @@ class CRM
     print 'Enter a Note: '
     note = gets.chomp
 
-    new_contact = Contact.create(first_name, last_name, email, note)
+    new_contact = Contact.create(
+      first_name: first_name,
+      last_name:  last_name,
+      email:      email,
+      note:       note
+    )
     puts
+
     puts "Adding new user..."
     sleep(1)
     puts "-------------------------------------------------------------------------"
@@ -78,11 +85,11 @@ class CRM
       puts "Press any key to continue.."
       gets.chomp
       system("clear")
-      search = search_by_attribute
+      result = search_by_attribute
       system("clear")
       update_menu
       user_selected = gets.to_i
-      update_option(user_selected)
+      update_option(result, user_selected)
   end
 
   def update_menu
@@ -98,12 +105,14 @@ class CRM
     print 'Enter a number: '
   end
 
-  def update_option(user_selected)
+  def update_option(result, user_selected)
+       puts "Enter value to update"
+       value = gets.chomp
       case user_selected
-      when 1 then Contact.update=("first_name")
-      when 2 then Contact.update=("last_name")
-      when 3 then Contact.update=("email")
-      when 4 then Contact.update=("note")
+      when 1 then result.update(first_name: value)
+      when 2 then result.update(last_name: value)
+      when 3 then result.update(email: value)
+      when 4 then result.update(note: value)
       when 5 then main_menu
       end
   end
@@ -117,7 +126,9 @@ class CRM
     puts "Delete a contact"
     puts "----------------------------------------------------"
     first_name = "first_name"
-    contact_to_delete = Contact.find_by(first_name)
+    print "Please enter the #{first_name} of the contact you wish to delete: "
+    value = gets.chomp
+    contact_to_delete = Contact.find_by(first_name => value)
     if contact_to_delete == nil
       puts
       puts "Sorry this contact does not exist, it may have already been deleted"
@@ -170,8 +181,11 @@ class CRM
     attribute = attribute_option(user_selected)
     puts "Searching for user by '#{attribute}'"
     puts
-    result = Contact.find_by(attribute)
+    print "Please enter the '#{attribute}' for the user you wish to find: "
+    value = gets.chomp
+    result = Contact.find_by(attribute => value)
     display_search_result(result)
+    result
   end
 
   def attribute_menu
@@ -192,10 +206,10 @@ class CRM
 
   def attribute_option(user_selected)
       case user_selected
-      when 1 then "first_name"
-      when 2 then "last_name"
-      when 3 then "email"
-      when 4 then "note"
+      when 1 then 'first_name'
+      when 2 then 'last_name'
+      when 3 then 'email'
+      when 4 then 'note'
       when 5 then main_menu
       end
   end
@@ -231,8 +245,4 @@ end
 
 
 a_crm_app = CRM.new("My Contacts")
-Contact.create("Marlon", "O'Neil", "marlon@email.com", nil)
-Contact.create("Lamanie", "Arridnell", "lamanie@email.com", nil)
-Contact.create("John", "Smith", "john@email.com", nil)
-Contact.create("Peter", "Robinson", "peter@email.com", nil)
 a_crm_app.main_menu
